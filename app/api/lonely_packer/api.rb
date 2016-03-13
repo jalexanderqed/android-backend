@@ -13,7 +13,7 @@ module LonelyPacker
 
       end
       get '/' do
-        Hash['test', 'response']
+        Hash['test', 'other_response']
       end
 
       desc 'Create a new user.'
@@ -21,7 +21,7 @@ module LonelyPacker
         requires :username, type: String
       end
       post 'create' do
-        Hash['test', 'response']
+        Hash['test', 'other_response']
       end
     end
   end
