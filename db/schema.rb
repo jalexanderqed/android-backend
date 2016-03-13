@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160313032935) do
+ActiveRecord::Schema.define(version: 20160313171544) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,9 +39,10 @@ ActiveRecord::Schema.define(version: 20160313032935) do
     t.datetime "updated_at",  null: false
   end
 
+  add_index "users", ["username"], name: "unique_username", unique: true, using: :btree
+
   create_table "visited_countries", force: :cascade do |t|
     t.string   "name",       null: false
-    t.string   "year",       null: false
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
