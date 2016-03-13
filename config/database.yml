@@ -95,4 +95,4 @@ production:
   pool: 5
   database: android-backend_development
   username: android_backend
-  password: android_backend
+  password: android_backend_for_hollerer_2016
