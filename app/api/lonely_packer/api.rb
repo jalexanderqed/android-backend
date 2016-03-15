@@ -1,5 +1,7 @@
 module LonelyPacker
   class API < Grape::API
+    use Grape::Middleware::Logger
+
     version 'v1', using: :header, vendor: 'lonely_packer'
     format :json
     prefix :api
@@ -46,7 +48,7 @@ module LonelyPacker
           end
 
           status 201
-          u
+          present u, with: User::Entity
         rescue
           error! 'Unexpected error', 500
         end
@@ -55,7 +57,7 @@ module LonelyPacker
       desc 'Update a user.'
       params do
         requires :username, type: String
-        optional :password, type: String
+        requires :password, type: String
         optional :real_name, type: String
         optional :birth_year, type: Integer
         optional :birth_month, type: Integer
@@ -67,8 +69,8 @@ module LonelyPacker
         begin
           u = User.find_by(username: params[:username]);
 
-          if !u.present?
-            error! 'User not found.', 404
+          if !u.present? || !(u.password == params[:password])
+            error! 'Invalid login attempt.', 401
           end
 
           u.password = params[:password] if params[:password].present?
@@ -87,11 +89,58 @@ module LonelyPacker
           u.save!
 
           status 200
-          u
+          present u, with: User::Entity
         rescue
           error! 'Unexpected error', 500
         end
       end
+
+      route_param :username, type: String do
+
+        before do
+          @user = User.find_by(username: params[:username]);
+
+          if !@user.present? || !(@user.password == params[:password])
+            error! 'Invalid login attempt.', 401
+          end
+        end
+
+        desc 'Returns a specific user.'
+        params do
+          requires :password, type: String
+        end
+        get '/' do
+          begin
+            status 200
+            present @user, with: User::Entity
+          rescue
+            error! 'Unexpected error', 500
+          end
+        end
+
+        desc 'Adds a check in for a user.'
+        params do
+          requires :password, type: String
+          requires :latitude, type: Float
+          requires :longitude, type: Float
+          optional :comment, type: String
+        end
+        post :check_in do
+          begin
+            c = @user.check_ins.create(
+                latitude: params[:latitude],
+                longitude: params[:longitude],
+                comment: params[:comment]
+            )
+            status 201
+            c
+          rescue
+            error! 'Unexpected error', 500
+          end
+        end
+
+      end
+
     end
   end
 end
