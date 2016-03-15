@@ -134,7 +134,7 @@ module LonelyPacker
                 comment: params[:comment]
             )
             status 201
-            c
+            present c, with: CheckIn::Entity
           rescue
             error! 'Unexpected error', 500
           end
