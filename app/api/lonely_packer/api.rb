@@ -59,6 +59,33 @@ module LonelyPacker
         end
       end
 
+      desc 'Search for user by age and location.'
+      params do
+        requires :min_lat, type: Float
+        requires :max_lat, type: Float
+        requires :min_lng, type: Float
+        requires :max_lng, type: Float
+        requires :min_age, type: Integer
+        requires :max_age, type: Integer
+      end
+      get :search do
+        begin
+          users = User.where(birth_year:
+                                 (Time.now.year - params[:max_age])..(Time.now.year - params[:min_age])).select do |u|
+            u.check_ins.present? &&
+            u.check_ins.last.latitude >= params[:min_lat] &&
+                u.check_ins.last.latitude <= params[:max_lat] &&
+                u.check_ins.last.longitude >= params[:min_lng] &&
+                u.check_ins.last.longitude <= params[:max_lng]
+          end
+
+          present users, with: User::Entity
+
+        rescue
+          error! 'Unexpected error', 500
+        end
+      end
+
       route_param :username, type: String do
 
         before do
