@@ -3,8 +3,8 @@ source 'https://rubygems.org'
 gem 'grape-entity'
 gem 'pry-rails'
 gem 'hashie-forbidden_attributes'
-gem 'grape', '>= 0.14.0'
-gem 'grape-middleware-logger'
+gem 'grape'
+#gem 'grape-middleware-logger'
 
 gem 'passenger'
 

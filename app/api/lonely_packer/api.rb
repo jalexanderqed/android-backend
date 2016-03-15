@@ -1,7 +1,5 @@
 module LonelyPacker
   class API < Grape::API
-    use Grape::Middleware::Logger
-
     version 'v1', using: :header, vendor: 'lonely_packer'
     format :json
     prefix :api
