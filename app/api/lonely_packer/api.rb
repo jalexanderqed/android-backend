@@ -2,6 +2,10 @@ module LonelyPacker
   class API < Grape::API
     use Grape::Middleware::Logger
 
+    class UserList < Grape::Entity
+      expose 'users', using: User::Entity
+    end
+
     version 'v1', using: :header, vendor: 'lonely_packer'
     format :json
     prefix :api
@@ -79,7 +83,9 @@ module LonelyPacker
                 u.check_ins.last.longitude <= params[:max_lng]
           end
 
-          present users, with: User::Entity
+          user_list = {:users => users}
+
+          present user_list, with: UserList
 
         rescue
           error! 'Unexpected error', 500
