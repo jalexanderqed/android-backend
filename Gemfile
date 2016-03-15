@@ -4,7 +4,7 @@ gem 'grape-entity'
 gem 'pry-rails'
 gem 'hashie-forbidden_attributes'
 gem 'grape'
-#gem 'grape-middleware-logger'
+gem 'grape-middleware-logger'
 
 gem 'passenger'
 
