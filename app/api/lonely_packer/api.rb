@@ -126,7 +126,7 @@ module LonelyPacker
           requires :longitude, type: Float
           optional :comment, type: String
         end
-        post :check_in do
+        post :checkin do
           begin
             c = @user.check_ins.create(
                 latitude: params[:latitude],
